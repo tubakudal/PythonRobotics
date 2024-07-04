@@ -8,33 +8,41 @@ import numpy as np
 
 class TrajectoryGenerator():
     def __init__(self, start_pos, des_pos, T, start_vel=[0,0,0], des_vel=[0,0,0], start_acc=[0,0,0], des_acc=[0,0,0]):
+        # Initial position
         self.start_x = start_pos[0]
         self.start_y = start_pos[1]
         self.start_z = start_pos[2]
 
+        # Desired position
         self.des_x = des_pos[0]
         self.des_y = des_pos[1]
         self.des_z = des_pos[2]
 
+        # Initial velocity
         self.start_x_vel = start_vel[0]
         self.start_y_vel = start_vel[1]
         self.start_z_vel = start_vel[2]
 
+        # Desired velocity
         self.des_x_vel = des_vel[0]
         self.des_y_vel = des_vel[1]
         self.des_z_vel = des_vel[2]
 
+        # Initial acceleration
         self.start_x_acc = start_acc[0]
         self.start_y_acc = start_acc[1]
         self.start_z_acc = start_acc[2]
 
+        # Desired acceleration
         self.des_x_acc = des_acc[0]
         self.des_y_acc = des_acc[1]
         self.des_z_acc = des_acc[2]
 
+        # Time duration
         self.T = T
 
     def solve(self):
+        # Coefficient matrix for quintic polynomial
         A = np.array(
             [[0, 0, 0, 0, 0, 1],
              [self.T**5, self.T**4, self.T**3, self.T**2, self.T, 1],
@@ -44,6 +52,7 @@ class TrajectoryGenerator():
              [20*self.T**3, 12*self.T**2, 6*self.T, 2, 0, 0]
             ])
 
+        # Boundary conditions for x
         b_x = np.array(
             [[self.start_x],
              [self.des_x],
@@ -53,6 +62,7 @@ class TrajectoryGenerator():
              [self.des_x_acc]
             ])
 
+        # Boundary conditions for y
         b_y = np.array(
             [[self.start_y],
              [self.des_y],
@@ -62,6 +72,7 @@ class TrajectoryGenerator():
              [self.des_y_acc]
             ])
 
+        # Boundary conditions for z
         b_z = np.array(
             [[self.start_z],
              [self.des_z],
@@ -71,6 +82,7 @@ class TrajectoryGenerator():
              [self.des_z_acc]
             ])
 
+        # Solve for polynomial coefficients for x, y, and z
         self.x_c = np.linalg.solve(A, b_x)
         self.y_c = np.linalg.solve(A, b_y)
         self.z_c = np.linalg.solve(A, b_z)
