@@ -1,28 +1,29 @@
-version: 2.1
-
+# Define the ORBs 
 orbs:
-  python: circleci/python@1.4.0
+  python: circleci/python@1.4.0  # Predefined jobs and commands
 
+# Define the jobs
 jobs:
   build_doc:
     docker:
-      - image: cimg/python:3.12
+      - image: cimg/python:3.12  # Use a Docker image 
     steps:
-      - checkout
+      - checkout  # Check out the source code 
       - run:
-          name: doc_build
-          command: |
-            python --version
-            python -m venv venv
-            . venv/bin/activate
-            pip install -r requirements/requirements.txt
-            pip install -r docs/doc_requirements.txt
-            cd docs;make html
+          name: doc_build  
+          command: |  
+            python --version  # Print the Python version
+            python -m venv venv  # Create a virtual environment
+            . venv/bin/activate  # Activate it
+            pip install -r requirements/requirements.txt  # Install required Python packages
+            pip install -r docs/doc_requirements.txt  # Install documentation
+            cd docs; make html  # Change directory to 'docs' and build the HTML documentation
       - store_artifacts:
-          path: docs/_build/html/
-          destination: html
+          path: docs/_build/html/  # Specify the path of the artifacts to store
+          destination: html  # Destination folder name 
 
+# Define the workflows
 workflows:
   main:
     jobs:
-      - build_doc
+      - build_doc  # Run the 'build_doc' job 
